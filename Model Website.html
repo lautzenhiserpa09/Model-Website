@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Local Catalog - Home</title>
+    <!-- Import Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body { font-family: 'Inter', sans-serif; background-color: #f7f7f7; }
+        .page-content { display: none; animation: fadeIn 0.5s; }
+        .page-content.active { display: block; }
+        
+        /* Navigation Styles - Using Teal */
+        .nav-link { @apply px-4 py-2 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-lg cursor-pointer transition-colors; }
+        .nav-link.active { @apply text-teal-600 font-semibold bg-teal-100; }
+        
+        /* Product Card & Filter Styles */
+        input[type="checkbox"] {
+            @apply form-checkbox h-4 w-4 text-teal-600 rounded border-gray-300 focus:ring-teal-500;
+        }
+        .teal-btn {
+            @apply w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition-colors shadow-md;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-3xl font-bold text-gray-800 tracking-tight">
+                <a href="#" onclick="navigate('home')">The Local Catalog</a>
+            </div>
+            <!-- Navigation Links -->
+            <ul id="nav-links" class="flex space-x-4">
+                <li><a class="nav-link active" data-page="home" onclick="navigate('home')">Home</a></li>
+                <li><a class="nav-link" data-page="mens" onclick="navigate('mens', true)">Men's Clothing</a></li>
+                <li><a class="nav-link" data-page="womens" onclick="navigate('womens', true)">Women's Clothing</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-6">
+
+        <!-- Page: Home (Main Landing Page) -->
+        <section id="page-home" class="page-content active">
+            <div class="bg-teal-600 text-white p-16 text-center rounded-2xl shadow-2xl">
+                <h1 class="text-6xl font-extrabold mb-4">Discover Local Style</h1>
+                <p class="text-2xl mb-8 font-light">Your online lookbook for everything in stock at the shop.</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="#" onclick="navigate('mens', true)" class="bg-white text-teal-600 font-bold text-lg px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                        Browse Men's
+                    </a>
+                    <a href="#" onclick="navigate('womens', true)" class="bg-teal-700 text-white font-bold text-lg px-8 py-3 rounded-full shadow-lg hover:bg-teal-800 transition-colors">
+                        Browse Women's
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-16 grid md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">In-Store Availability</h3>
+                    <p class="text-gray-600">See real-time mock stock status before you visit.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">Powerful Filtering</h3>
+                    <p class="text-gray-600">Quickly sort by color, brand, or style.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">Zero Wait</h3>
+                    <p class="text-gray-600">The entire catalog loads instantly, no slow server requests.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page: Men's Clothing (Catalog Section) -->
+        <section id="page-mens" class="page-content">
+            <h2 class="text-4xl font-bold text-center mb-8 text-gray-800">Men's Collection</h2>
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Filter Sidebar -->
+                <div class="lg:w-1/4 bg-white p-6 rounded-xl shadow-lg h-fit sticky top-24">
+                    <h3 class="text-xl font-semibold mb-4 border-b pb-2">Filter Products</h3>
+                    <div id="filter-sidebar-mens" class="space-y-4">
+                        <!-- Filters will be injected here -->
+                    </div>
+                    <button onclick="applyFilters('mens')" class="teal-btn mt-6">Apply Filters</button>
+                    <button onclick="clearFilters('mens')" class="mt-2 w-full text-teal-500 py-2 hover:underline">Clear Filters</button>
+                </div>
+                <!-- Product Grid -->
+                <div id="product-grid-mens" class="lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Products will be dynamically generated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Page: Women's Clothing (Catalog Section) -->
+        <section id="page-womens" class="page-content">
+            <h2 class="text-4xl font-bold text-center mb-8 text-gray-800">Women's Collection</h2>
+             <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Filter Sidebar -->
+                <div class="lg:w-1/4 bg-white p-6 rounded-xl shadow-lg h-fit sticky top-24">
+                    <h3 class="text-xl font-semibold mb-4 border-b pb-2">Filter Products</h3>
+                    <div id="filter-sidebar-womens" class="space-y-4">
+                        <!-- Filters will be injected here -->
+                    </div>
+                    <button onclick="applyFilters('womens')" class="teal-btn mt-6">Apply Filters</button>
+                    <button onclick="clearFilters('womens')" class="mt-2 w-full text-teal-500 py-2 hover:underline">Clear Filters</button>
+                </div>
+                <!-- Product Grid -->
+                <div id="product-grid-womens" class="lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Products will be dynamically generated here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 mt-12 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; <span id="current-year"></span> The Local Catalog. For illustration only. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Simulated Database: Product Data Array ---
+        // Add, remove, or edit products here. This is the only place you need to change the data!
+        const productData = [
+            // Men's Products
+            { id: 1, category: 'mens', name: 'Vintage Denim Jacket', brand: 'Outerwear Co.', price: 79.99, color: 'Blue', inStock: true, image: 'https://placehold.co/400x500/209c91/ffffff?text=Denim+Jacket' },
+            { id: 2, category: 'mens', name: 'Commuter Chinos', brand: 'FlexWear', price: 45.00, color: 'Khaki', inStock: true, image: 'https://placehold.co/400x500/fcd34d/333333?text=Chinos' },
+            { id: 3, category: 'mens', name: 'Merino Wool Sweater', brand: 'KnitPro', price: 62.50, color: 'Gray', inStock: false, image: 'https://placehold.co/400x500/9ca3af/ffffff?text=Sweater' },
+            { id: 4, category: 'mens', name: 'Essential Polo Shirt', brand: 'FlexWear', price: 39.00, color: 'White', inStock: true, image: 'https://placehold.co/400x500/ffffff/333333?text=Polo+Shirt' },
+            { id: 5, category: 'mens', name: 'Leather Wallet', brand: 'Accessories Lux', price: 59.99, color: 'Black', inStock: true, image: 'https://placehold.co/400x500/1f2937/ffffff?text=Wallet' },
+            { id: 6, category: 'mens', name: 'Cotton Crew Socks (3-pack)', brand: 'Essentials', price: 15.00, color: 'White', inStock: true, image: 'https://placehold.co/400x500/ffffff/333333?text=Socks' },
+            { id: 7, category: 'mens', name: 'Rain-Ready Parka', brand: 'Outerwear Co.', price: 120.00, color: 'Green', inStock: true, image: 'https://placehold.co/400x500/10b981/ffffff?text=Parka' },
+            { id: 8, category: 'mens', name: 'Stripe T-Shirt', brand: 'Essentials', price: 25.00, color: 'Blue', inStock: true, image: 'https://placehold.co/400x500/209c91/ffffff?text=Striped+Tee' },
+
+            // Women's Products
+            { id: 9, category: 'womens', name: 'Maxi Floral Dress', brand: 'Summer Bliss', price: 85.00, color: 'Yellow', inStock: true, image: 'https://placehold.co/400x500/fde047/333333?text=Maxi+Dress' },
+            { id: 10, category: 'womens', name: 'Straight-Leg Jeans', brand: 'Denim Flow', price: 69.99, color: 'Dark Blue', inStock: true, image: 'https://placehold.co/400x500/1e3a8a/ffffff?text=Dark+Jeans' },
+            { id: 11, category: 'womens', name: 'Soft Knit Cardigan', brand: 'KnitPro', price: 75.00, color: 'Pink', inStock: false, image: 'https://placehold.co/400x500/fbcfe8/333333?text=Cardigan' },
+            { id: 12, category: 'womens', name: 'Slingback Heels', brand: 'Accessories Lux', price: 99.00, color: 'Black', inStock: true, image: 'https://placehold.co/400x500/1f2937/ffffff?text=Heels' },
+            { id: 13, category: 'womens', name: 'Linen Trousers', brand: 'Summer Bliss', price: 48.00, color: 'White', inStock: true, image: 'https://placehold.co/400x500/ffffff/333333?text=Trousers' },
+            { id: 14, category: 'womens', name: 'Tote Bag', brand: 'Accessories Lux', price: 65.00, color: 'Brown', inStock: true, image: 'https://placehold.co/400x500/996633/ffffff?text=Tote+Bag' },
+            { id: 15, category: 'womens', name: 'Classic Trench Coat', brand: 'Outerwear Co.', price: 150.00, color: 'Beige', inStock: true, image: 'https://placehold.co/400x500/dccb99/333333?text=Trench+Coat' },
+            { id: 16, category: 'womens', name: 'Jersey Skirt', brand: 'Denim Flow', price: 35.00, color: 'Gray', inStock: true, image: 'https://placehold.co/400x500/9ca3af/ffffff?text=Skirt' },
+        ];
+
+        // --- Core Functions for Navigation and Filtering ---
+
+        /**
+         * Navigates between page sections (Home, Mens, Womens).
+         * @param {string} pageName - The ID suffix of the page section (e.g., 'mens').
+         * @param {boolean} [isCatalog=false] - If true, initializes the catalog and filters.
+         */
+        function navigate(pageName, isCatalog = false) {
+            // 1. Hide all page content
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // 2. Show the requested page
+            const activePage = document.getElementById('page-' + pageName);
+            if (activePage) {
+                activePage.classList.add('active');
+            }
+
+            // 3. Update active state in navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.dataset.page === pageName) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            // 4. If it's a catalog page, initialize the data and filters
+            if (isCatalog) {
+                initializeCatalog(pageName);
+            }
+
+            // 5. Update the page title
+            const pageTitle = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+            document.title = `The Local Catalog - ${pageTitle}`;
+
+            // 6. Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        /**
+         * Generates the HTML for a single product card.
+         */
+        function createProductCard(product) {
+            const stockClass = product.inStock
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-700';
+            const stockText = product.inStock ? 'In Stock' : 'Out of Stock (Call Store)';
+
+            return `
+                <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all overflow-hidden">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-72 object-cover">
+                    <div class="p-4 space-y-2">
+                        <p class="text-xs font-medium text-gray-500">${product.brand}</p>
+                        <h4 class="text-lg font-semibold text-gray-800 truncate">${product.name}</h4>
+                        <p class="text-xl font-bold text-teal-600">$${product.price.toFixed(2)}</p>
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full ${stockClass}">
+                                ${stockText}
+                            </span>
+                            <span class="text-xs text-gray-500">Color: ${product.color}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Renders the product grid with the filtered list.
+         */
+        function renderCatalog(category, filteredProducts) {
+            const gridContainer = document.getElementById(`product-grid-${category}`);
+            
+            // Generate product cards HTML
+            const productHtml = filteredProducts.map(createProductCard).join('');
+            
+            if (filteredProducts.length === 0) {
+                 gridContainer.innerHTML = '<div class="col-span-full text-center text-gray-500 text-xl mt-12 p-8 bg-white rounded-xl shadow-lg">No products match your current filters. Try clearing them!</div>';
+            } else {
+                gridContainer.innerHTML = productHtml;
+            }
+        }
+
+        /**
+         * Builds the filter sidebar dynamically based on the available products.
+         */
+        function buildFilters(category) {
+            const products = productData.filter(p => p.category === category);
+            const sidebar = document.getElementById(`filter-sidebar-${category}`);
+            sidebar.innerHTML = ''; // Clear existing filters
+
+            // 1. Extract Unique Values
+            const colors = [...new Set(products.map(p => p.color))].sort();
+            const brands = [...new Set(products.map(p => p.brand))].sort();
+
+            // 2. Generate Filters HTML
+            
+            // --- Color Filter ---
+            let colorHtml = '<div class="space-y-2"> <p class="font-medium text-gray-700">Color</p>';
+            colors.forEach(color => {
+                const id = `${category}-color-${color.replace(/\s/g, '')}`;
+                colorHtml += `
+                    <label for="${id}" class="flex items-center space-x-2 text-sm cursor-pointer">
+                        <input type="checkbox" id="${id}" name="color" value="${color}">
+                        <span>${color}</span>
+                    </label>
+                `;
+            });
+            colorHtml += '</div>';
+            sidebar.innerHTML += colorHtml;
+
+            // --- Brand Filter ---
+            let brandHtml = '<div class="space-y-2 pt-4 border-t mt-4"> <p class="font-medium text-gray-700">Brand</p>';
+            brands.forEach(brand => {
+                const id = `${category}-brand-${brand.replace(/\s/g, '')}`;
+                brandHtml += `
+                    <label for="${id}" class="flex items-center space-x-2 text-sm cursor-pointer">
+                        <input type="checkbox" id="${id}" name="brand" value="${brand}">
+                        <span>${brand}</span>
+                    </label>
+                `;
+            });
+            brandHtml += '</div>';
+            sidebar.innerHTML += brandHtml;
+        }
+
+        /**
+         * Applies the selected filters to the product list and re-renders the grid.
+         */
+        function applyFilters(category) {
+            const productsToFilter = productData.filter(p => p.category === category);
+            const sidebar = document.getElementById(`filter-sidebar-${category}`);
+            
+            // Get selected colors
+            const selectedColors = Array.from(sidebar.querySelectorAll('input[name="color"]:checked'))
+                                         .map(cb => cb.value);
+
+            // Get selected brands
+            const selectedBrands = Array.from(sidebar.querySelectorAll('input[name="brand"]:checked'))
+                                       .map(cb => cb.value);
+
+            let filteredList = productsToFilter;
+
+            // Filter by Color: only filter if at least one color is selected
+            if (selectedColors.length > 0) {
+                filteredList = filteredList.filter(p => selectedColors.includes(p.color));
+            }
+
+            // Filter by Brand: only filter if at least one brand is selected
+            if (selectedBrands.length > 0) {
+                filteredList = filteredList.filter(p => selectedBrands.includes(p.brand));
+            }
+            
+            // Re-render the grid with the filtered list
+            renderCatalog(category, filteredList);
+        }
+
+        /**
+         * Clears all filters and re-renders the full catalog.
+         */
+        function clearFilters(category) {
+            const sidebar = document.getElementById(`filter-sidebar-${category}`);
+             // Uncheck all checkboxes
+            sidebar.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            // Re-render the initial catalog
+            initializeCatalog(category);
+        }
+
+        /**
+         * Initializes the catalog page: builds filters and renders the initial full list.
+         */
+        function initializeCatalog(category) {
+            // Build the filter sidebar first
+            buildFilters(category);
+            
+            // Render the full list initially
+            const initialProducts = productData.filter(p => p.category === category);
+            renderCatalog(category, initialProducts);
+        }
+
+        // --- Initial Load Setup ---
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        // Start on the home page when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            navigate('home');
+        });
+    </script>
+</body>
+</html>
