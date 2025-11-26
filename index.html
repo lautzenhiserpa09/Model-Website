@@ -83,6 +83,13 @@
         <!-- Page: Men's Clothing (Catalog Section) -->
         <section id="page-mens" class="page-content">
             <h2 class="text-4xl font-bold text-center mb-8 text-gray-800">Men's Collection</h2>
+            <!-- NEW: Search Bar for Men's Section -->
+<div class="mb-8 w-full">
+    <input type="text" id="search-mens" oninput="applyFilters('mens')" 
+           placeholder="Search Men's products by name..." 
+           class="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-teal-500 focus:border-teal-500 transition-colors">
+</div>
+<!-- END NEW SEARCH BAR -->
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Filter Sidebar -->
                 <div class="lg:w-1/4 bg-white p-6 rounded-xl shadow-lg h-fit sticky top-24">
@@ -103,6 +110,13 @@
         <!-- Page: Women's Clothing (Catalog Section) -->
         <section id="page-womens" class="page-content">
             <h2 class="text-4xl font-bold text-center mb-8 text-gray-800">Women's Collection</h2>
+            <!-- NEW: Search Bar for Women's Section -->
+<div class="mb-8 w-full">
+    <input type="text" id="search-womens" oninput="applyFilters('womens')" 
+           placeholder="Search Women's products by name..." 
+           class="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-teal-500 focus:border-teal-500 transition-colors">
+</div>
+<!-- END NEW SEARCH BAR -->
              <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Filter Sidebar -->
                 <div class="lg:w-1/4 bg-white p-6 rounded-xl shadow-lg h-fit sticky top-24">
@@ -282,67 +296,82 @@
         }
 
         /**
-         * Applies the selected filters to the product list and re-renders the grid.
-         */
-        function applyFilters(category) {
-            const productsToFilter = productData.filter(p => p.category === category);
-            const sidebar = document.getElementById(`filter-sidebar-${category}`);
-            
-            // Get selected colors
-            const selectedColors = Array.from(sidebar.querySelectorAll('input[name="color"]:checked'))
-                                         .map(cb => cb.value);
+ * Applies the selected filters AND search term to the product list and re-renders the grid.
+ */
+function applyFilters(category) {
+    const productsToFilter = productData.filter(p => p.category === category);
+    const sidebar = document.getElementById(`filter-sidebar-${category}`);
+    
+    // 1. Get search term (NEW)
+    const searchBar = document.getElementById(`search-${category}`);
+    const searchTerm = searchBar ? searchBar.value.toLowerCase().trim() : '';
 
-            // Get selected brands
-            const selectedBrands = Array.from(sidebar.querySelectorAll('input[name="brand"]:checked'))
-                                       .map(cb => cb.value);
+    // 2. Get selected colors
+    const selectedColors = Array.from(sidebar.querySelectorAll('input[name="color"]:checked'))
+                                 .map(cb => cb.value);
 
-            let filteredList = productsToFilter;
+    // 3. Get selected brands
+    const selectedBrands = Array.from(sidebar.querySelectorAll('input[name="brand"]:checked'))
+                               .map(cb => cb.value);
 
-            // Filter by Color: only filter if at least one color is selected
-            if (selectedColors.length > 0) {
-                filteredList = filteredList.filter(p => selectedColors.includes(p.color));
-            }
+    let filteredList = productsToFilter;
 
-            // Filter by Brand: only filter if at least one brand is selected
-            if (selectedBrands.length > 0) {
-                filteredList = filteredList.filter(p => selectedBrands.includes(p.brand));
-            }
-            
-            // Re-render the grid with the filtered list
-            renderCatalog(category, filteredList);
-        }
+    // --- Step 1: Filter by Search Term (NEW) ---
+    if (searchTerm.length > 0) {
+        filteredList = filteredList.filter(p => p.name.toLowerCase().includes(searchTerm));
+    }
+
+    // --- Step 2: Filter by Color ---
+    if (selectedColors.length > 0) {
+        filteredList = filteredList.filter(p => selectedColors.includes(p.color));
+    }
+
+    // --- Step 3: Filter by Brand ---
+    if (selectedBrands.length > 0) {
+        filteredList = filteredList.filter(p => selectedBrands.includes(p.brand));
+    }
+    
+    // Re-render the grid with the final filtered list
+    renderCatalog(category, filteredList);
+}
+
+       /**
+ * Clears all filters and the search bar, then re-renders the full catalog.
+ */
+function clearFilters(category) {
+    const sidebar = document.getElementById(`filter-sidebar-${category}`);
+    const searchBar = document.getElementById(`search-${category}`);
+    
+     // Clear Search Bar (NEW)
+     if (searchBar) {
+         searchBar.value = '';
+     }
+
+     // Uncheck all checkboxes
+    sidebar.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+    });
+    // Re-render the initial catalog
+    initializeCatalog(category);
+}
 
         /**
-         * Clears all filters and re-renders the full catalog.
-         */
-        function clearFilters(category) {
-            const sidebar = document.getElementById(`filter-sidebar-${category}`);
-             // Uncheck all checkboxes
-            sidebar.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                cb.checked = false;
-            });
-            // Re-render the initial catalog
-            initializeCatalog(category);
-        }
-
-        /**
-         * Initializes the catalog page: builds filters and renders the initial full list.
-         */
-        function initializeCatalog(category) {
-            // Build the filter sidebar first
-            buildFilters(category);
-            
-            // Render the full list initially
-            const initialProducts = productData.filter(p => p.category === category);
-            renderCatalog(category, initialProducts);
-        }
-
-        // --- Initial Load Setup ---
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        // Start on the home page when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            navigate('home');
-        });
+ * Initializes the catalog page: builds filters, clears inputs, and renders the initial full list.
+ */
+function initializeCatalog(category) {
+    // Clear the search bar on initialization (NEW)
+    const searchBar = document.getElementById(`search-${category}`);
+    if (searchBar) {
+        searchBar.value = '';
+    }
+    
+    // Build the filter sidebar first
+    buildFilters(category);
+    
+    // Render the full list initially
+    const initialProducts = productData.filter(p => p.category === category);
+    renderCatalog(category, initialProducts);
+}
     </script>
 </body>
 </html>
